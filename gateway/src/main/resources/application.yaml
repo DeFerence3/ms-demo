@@ -1,0 +1,37 @@
+server:
+  port: '8080'
+
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: 'true'
+              lower-case-service-id: 'true'
+        routes[0]:
+          id: product
+          uri: lb://product
+          predicates[0]: Path=/products/**
+        routes[1]:
+          uri: lb://order
+          id: order
+          predicates[0]: Path=/orders/**
+        routes[2]:
+          uri: lb://payment
+          id: payment
+          predicates[0]: Path=/payment/**
+
+eureka:
+  instance:
+    instanceId: gateway-service:${server.port}
+    preferIpAddress: true
+    statusPageUrl: https://${eureka.hostname}:${server.port}/actuator
+    healthCheckUrl: https://${eureka.hostname}:${server.port}/actuator/health
+    client:
+      serviceUrl:
+        defaultZone: http://localhost:8761/eureka/

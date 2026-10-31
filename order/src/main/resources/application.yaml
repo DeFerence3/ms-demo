@@ -1,0 +1,18 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: order
+
+eureka:
+  instance:
+    instanceId: order-service:${server.port}
+    preferIpAddress: true
+    statusPageUrl: https://${eureka.hostname}:${server.port}/actuator
+    healthCheckUrl: https://${eureka.hostname}:${server.port}/actuator/health
+  client:
+    enabled : true
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+
